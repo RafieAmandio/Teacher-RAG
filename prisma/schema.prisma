@@ -1,0 +1,81 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  password          String
+  name              String
+  role              UserRole
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  agentsCreated     Agent[]     @relation("TeacherAgents")
+  chats             Chat[]
+  messages          Message[]
+}
+
+enum UserRole {
+  TEACHER
+  STUDENT
+}
+
+model Agent {
+  id                String      @id @default(uuid())
+  name              String
+  subject           String
+  description       String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  teacherId         String
+  teacher           User        @relation("TeacherAgents", fields: [teacherId], references: [id])
+  documents         Document[]
+  chats             Chat[]
+}
+
+model Document {
+  id                String      @id @default(uuid())
+  title             String
+  filePath          String
+  content           String      @db.Text
+  vectorId          String      @unique
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  agentId           String
+  agent             Agent       @relation(fields: [agentId], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+  id                String      @id @default(uuid())
+  title             String      @default("New Chat")
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  userId            String
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentId           String
+  agent             Agent       @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  messages          Message[]
+}
+
+model Message {
+  id                String      @id @default(uuid())
+  content           String      @db.Text
+  role              MessageRole
+  createdAt         DateTime    @default(now())
+  chatId            String
+  chat              Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}

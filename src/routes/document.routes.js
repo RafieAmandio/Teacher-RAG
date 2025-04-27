@@ -1,5 +1,5 @@
 const express = require('express');
-const { uploadDocument, getDocumentsByAgent, deleteDocument } = require('../controllers/document.controller');
+const { uploadDocument, getDocumentsByAgent, deleteDocument, getDocumentStatus } = require('../controllers/document.controller');
 const { verifyToken, isTeacher } = require('../middleware/auth.middleware');
 const upload = require('../middleware/upload.middleware');
 
@@ -10,6 +10,7 @@ router.use(verifyToken);
 
 // Routes accessible to all authenticated users
 router.get('/agent/:agentId', getDocumentsByAgent);
+router.get('/status/:documentId', getDocumentStatus);
 
 // Routes accessible only to teachers
 router.post('/', isTeacher, upload.single('file'), uploadDocument);

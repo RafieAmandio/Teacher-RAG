@@ -24,4 +24,7 @@ router.put('/:id', isTeacher, updateAgent);
 router.delete('/:id', isTeacher, deleteAgent);
 router.get('/teacher/agents', isTeacher, getTeacherAgents);
 
+// The metrics route is defined in analytics.routes.js
+// router.get('/:agentId/metrics'
+
 module.exports = router;

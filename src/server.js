@@ -13,6 +13,9 @@ const userRoutes = require('./routes/user.routes');
 const agentRoutes = require('./routes/agent.routes');
 const documentRoutes = require('./routes/document.routes');
 const chatRoutes = require('./routes/chat.routes');
+const healthRoutes = require('./routes/health.routes');
+const statsRoutes = require('./routes/stats.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
 
 // Create Express app
 const app = express();
@@ -37,6 +40,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/health', healthRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
